@@ -1,0 +1,35 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.ccy.janurarychat"
+        minSdkVersion 23
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    compile project(':IMKit')
+    compile project(':CallKit')
+    compile project(':RedPacket')
+    compile project(':recognizer')
+    compile project(':contactcard')
+    compile project(':sticker')
+    compile 'com.android.support:multidex:1.0.2'
+    compile 'com.facebook.stetho:stetho:1.4.1'
+    compile files('libs/MiPush_SDK_Client_3_2_2.jar')
+}

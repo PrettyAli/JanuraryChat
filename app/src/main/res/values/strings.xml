@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">JanuraryChat</string>
+    <string name="forgot_password">忘记密码</string>
+    <string name="new_user">新用户</string>
+    <string name="login">登录</string>
+    <string name="phone_number">手机号码</string>
+    <string name="password">密码</string>
+    <string name="nickname">昵称</string>
+    <string name="code">短信验证码</string>
+    <string name="register">注册</string>
+    <string name="confirm">确认</string>
+    <string name="confirm_password">确认密码</string>
+    <string name="prompt">提示</string>
+    <string name="Illegal_phone_number">非法手机号</string>
+    <string name="code_is_null">验证码为空</string>
+    <string name="name_is_null">昵称不能为空</string>
+    <string name="name_contain_spaces">昵称不能包含空格</string>
+    <string name="not_send_code">未向服务端获取验证码</string>
+
+    <string name="other_devices_text">您的账号在别的设备上登录，您被迫下线!</string>
+    <string name="i_know">知道了</string>
+    <string name="phone_number_is_null">手机号不能为空</string>
+    <string name="password_is_null">密码不能为空</string>
+    <string name="password_cannot_contain_spaces">密码不能包含空格</string>
+    <string name="layout_dialog_loading">正在加载</string>
+</resources>

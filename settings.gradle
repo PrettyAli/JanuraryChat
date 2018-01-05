@@ -1,0 +1,1 @@
+include ':app', ':recognizer', ':IMKit', ':IMLib', ':sticker', ':contactcard', ':CallLib', ':CallKit', ':RedPacket'
