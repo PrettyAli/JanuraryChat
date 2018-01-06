@@ -1,8 +1,10 @@
 package com.ccy.janurarychat.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -40,20 +42,27 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= 21) {
+            View decorView = getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            getWindow().setStatusBarColor(Color.TRANSPARENT);
+        }
         super.setContentView(R.layout.activity_base);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);// 使得音量键控制媒体声音
         mContext = this;
 
         // 初始化公共头部
-        mContentView =  super.findViewById(R.id.layout_container);
+        mContentView = super.findViewById(R.id.layout_container);
         mHeadLayout = super.findViewById(R.id.layout_head);
-        mHeadRightText =  findViewById(R.id.text_right);
+        mHeadRightText = findViewById(R.id.text_right);
         mBtnLeft = super.findViewById(R.id.btn_left);
-        mBtnRight =  super.findViewById(R.id.btn_right);
-        mTitle =  super.findViewById(R.id.tv_title);
+        mBtnRight = super.findViewById(R.id.btn_right);
+        mTitle = super.findViewById(R.id.tv_title);
         mBtnBackDrawable = getResources().getDrawable(R.drawable.return_left);
         mBtnBackDrawable.setBounds(0, 0, mBtnBackDrawable.getMinimumWidth(),
-                                   mBtnBackDrawable.getMinimumHeight());
+                mBtnBackDrawable.getMinimumHeight());
 
 
         mAsyncTaskManager = AsyncTaskManager.getInstance(getApplicationContext());
@@ -66,7 +75,7 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
     @Override
     public void setContentView(View view) {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
         mContentView.addView(view, lp);
     }
 
@@ -202,10 +211,10 @@ public abstract class BaseActivity extends FragmentActivity implements OnDataLis
     /**
      * 发送请求（需要检查网络）
      *
-     * @param id 请求数据的用户ID或者groupID
+     * @param id          请求数据的用户ID或者groupID
      * @param requestCode 请求码
      */
-    public void request(String id , int requestCode) {
+    public void request(String id, int requestCode) {
         if (mAsyncTaskManager != null) {
             mAsyncTaskManager.request(id, requestCode, this);
         }

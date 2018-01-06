@@ -10,4 +10,8 @@
     <color name="de_title_bg">#0195ff</color>
     <color name="main_theme_color">#0195ff</color>
     <color name="press">#e8e8e8</color>
+    <color name="group_list_gray">#999999</color>
+    <color name="text_color">#353535</color>
+
+
 </resources>

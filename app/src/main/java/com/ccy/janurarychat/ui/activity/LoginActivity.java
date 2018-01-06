@@ -36,7 +36,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private static final int SYNC_USER_INFO = 9;
     private ImageView mImg_Background;
     private ClearWriteEditText mPhoneEdit, mPasswordEdit;
-    private TextView mRegister, forgetPassword;
+    private TextView mRegister, forgetPassword, prettyali;
     private Button mConfirm;
     private String phoneString;
     private String passwordString;
@@ -55,6 +55,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void initView() {
+        prettyali = findViewById(R.id.prettyali);
         mPhoneEdit = findViewById(R.id.de_login_phone);
         mPasswordEdit = findViewById(R.id.de_login_password);
         mConfirm = findViewById(R.id.de_login_sign);
@@ -64,6 +65,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         forgetPassword.setOnClickListener(this);
         mConfirm.setOnClickListener(this);
         mRegister.setOnClickListener(this);
+        prettyali.setOnClickListener(this);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -115,6 +117,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.prettyali:
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                break;
             case R.id.de_login_sign:
                 //获得输入的文字并把其中的空格删除
                 phoneString = mPhoneEdit.getText().toString().trim();

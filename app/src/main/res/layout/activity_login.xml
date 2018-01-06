@@ -5,9 +5,9 @@
 
     <FrameLayout
         android:id="@+id/de_frm_backgroud"
-        android:background="@drawable/de_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@drawable/de_bg">
 
         <ImageView
             android:id="@+id/de_img_backgroud"
@@ -131,6 +131,7 @@
         android:textSize="14sp" />
 
     <TextView
+        android:id="@+id/prettyali"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

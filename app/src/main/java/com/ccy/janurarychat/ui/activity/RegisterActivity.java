@@ -38,6 +38,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     private ClearWriteEditText mPhoneEdit, mCodeEdit, mNickEdit, mPasswordEdit;
     private Button mGetCode, mConfirm;
     private String mPhone, mCode, mNickName, mPassword, mCodeToken;
+    private TextView goLogin, goForget;
     private boolean isRequestCode = false;
     boolean isBright = true;
 
@@ -45,28 +46,28 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        setHeadVisibility(View.GONE);
         initView();
     }
 
     private void initView() {
 
-        mPhoneEdit = (ClearWriteEditText) findViewById(R.id.reg_phone);
-        mCodeEdit = (ClearWriteEditText) findViewById(R.id.reg_code);
-        mNickEdit = (ClearWriteEditText) findViewById(R.id.reg_username);
-        mPasswordEdit = (ClearWriteEditText) findViewById(R.id.reg_password);
-        mGetCode = (Button) findViewById(R.id.reg_getcode);
-        mConfirm = (Button) findViewById(R.id.reg_button);
+        mPhoneEdit = findViewById(R.id.reg_phone);
+        mCodeEdit = findViewById(R.id.reg_code);
+        mNickEdit = findViewById(R.id.reg_username);
+        mPasswordEdit = findViewById(R.id.reg_password);
+        mGetCode = findViewById(R.id.reg_getcode);
+        mConfirm = findViewById(R.id.reg_button);
+        goLogin = findViewById(R.id.reg_login);
+        goForget = findViewById(R.id.reg_forget);
+        mImgBackground = findViewById(R.id.rg_img_backgroud);
 
         mGetCode.setOnClickListener(this);
         mGetCode.setClickable(false);
         mConfirm.setOnClickListener(this);
-
-        TextView goLogin = (TextView) findViewById(R.id.reg_login);
-        TextView goForget = (TextView) findViewById(R.id.reg_forget);
         goLogin.setOnClickListener(this);
         goForget.setOnClickListener(this);
 
-        mImgBackground = (ImageView) findViewById(R.id.rg_img_backgroud);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -223,11 +224,18 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public void onTick(long millisUntilFinished) {
-
+        mGetCode.setText(String.valueOf(millisUntilFinished / 1000) + "s");
+        mGetCode.setClickable(false);
+        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_gray));
+        isBright = false;
     }
 
     @Override
     public void onFinish() {
+        mGetCode.setText(R.string.get_code);
+        mGetCode.setClickable(true);
+        mGetCode.setBackgroundDrawable(getResources().getDrawable(R.drawable.rs_select_btn_blue));
+        isBright = true;
 
     }
 }

@@ -3,21 +3,21 @@
     android:id="@+id/base_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/seal_bg"
+    android:background="@color/transparent"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layout_head"
+        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:background="@color/de_title_bg"
         android:orientation="horizontal">
 
         <Button
-            android:layout_weight="1"
             android:id="@+id/btn_left"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@drawable/selector_btn_back"
             android:gravity="center"
             android:onClick="onHeadLeftButtonClick"
@@ -43,26 +43,26 @@
             android:textSize="18sp" />
 
         <Button
-            android:layout_weight="1"
             android:id="@+id/btn_right"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:layout_weight="1"
             android:background="@null"
             android:maxLines="1"
             android:onClick="onHeadRightButtonClick"
             android:textColor="@drawable/selector_btn_top" />
 
         <TextView
-            android:layout_weight="1"
             android:id="@+id/text_right"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
+            android:layout_weight="1"
             android:clickable="true"
             android:maxLines="1"
             android:textColor="#fff"
