@@ -1,5 +1,6 @@
 package com.ccy.janurarychat.ui.activity;
 
+import android.app.Fragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,17 +16,25 @@ import android.widget.TextView;
 import com.ccy.janurarychat.R;
 import com.ccy.janurarychat.server.broadcast.BroadcastManager;
 import com.ccy.janurarychat.ui.BaseActivity;
+import com.ccy.janurarychat.ui.fragment.ContactsFragment;
 import com.ccy.janurarychat.ui.widget.DragPointView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.rong.imkit.manager.IUnReadMessageObserver;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DragPointView.OnDragListencer, IUnReadMessageObserver {
 
+    public static ViewPager mViewPager;
+    private List<Fragment> mFragment = new ArrayList<>();
     private RelativeLayout chatRLayout, contactRLayout, foundRLayout, mineRLayout;
     private ImageView mImageChats, mImageContact, mImageMe, mImageFind;
     private TextView mTextChats, mTextContact, mTextFind, mTextMe;
     private ImageView mMineRed, moreImage, mSearchImageView;
     private boolean isDebug;
+    private DragPointView mUnreadNumView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +44,23 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
         isDebug = getSharedPreferences("config", MODE_PRIVATE).getBoolean("isDebug", false);
 //        changeTextTabColor();
 //        changeSelectedTabState(0);
+        initMainViewPager();
         initViews();
+    }
+
+    private void initMainViewPager() {
+        Fragment conversationList=initConversationList();
+        mViewPager=findViewById(R.id.main_viewpager);
+        mUnreadNumView=findViewById(R.id.seal_num);
+        mUnreadNumView.setOnClickListener(this);
+        mUnreadNumView.setDragListencer(this);
+        mFragment.add(conversationList);
+        mFragment.add(new ContactsFragment());
+
+    }
+
+    private Fragment initConversationList() {
+        return null;
     }
 
     private void changeSelectedTabState(int position) {
