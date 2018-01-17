@@ -1,11 +1,12 @@
 package com.ccy.janurarychat.ui.activity;
 
-import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.View;
@@ -14,15 +15,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ccy.janurarychat.R;
-import com.ccy.janurarychat.server.broadcast.BroadcastManager;
+import com.ccy.janurarychat.server.widget.LoadDialog;
 import com.ccy.janurarychat.ui.BaseActivity;
 import com.ccy.janurarychat.ui.fragment.ContactsFragment;
+import com.ccy.janurarychat.ui.fragment.DiscoverFragment;
+import com.ccy.janurarychat.ui.fragment.MineFragment;
 import com.ccy.janurarychat.ui.widget.DragPointView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.rong.imkit.RongIM;
 import io.rong.imkit.manager.IUnReadMessageObserver;
+import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
+import io.rong.message.ContactNotificationMessage;
 
 public class MainActivity extends BaseActivity implements ViewPager.OnPageChangeListener, View.OnClickListener, DragPointView.OnDragListencer, IUnReadMessageObserver {
 
@@ -49,14 +56,110 @@ public class MainActivity extends BaseActivity implements ViewPager.OnPageChange
     }
 
     private void initMainViewPager() {
-        Fragment conversationList=initConversationList();
-        mViewPager=findViewById(R.id.main_viewpager);
-        mUnreadNumView=findViewById(R.id.seal_num);
+        Fragment conversationList = initConversationList();
+        mViewPager = findViewById(R.id.main_viewpager);
+        mUnreadNumView = findViewById(R.id.seal_num);
         mUnreadNumView.setOnClickListener(this);
         mUnreadNumView.setDragListencer(this);
         mFragment.add(conversationList);
         mFragment.add(new ContactsFragment());
+        mFragment.add(new DiscoverFragment());
+        mFragment.add(new MineFragment());
+        FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+            @Override
+            public Fragment getItem(int position) {
+                return mFragment.get(position);
+            }
 
+            @Override
+            public int getCount() {
+                return mFragment.size();
+            }
+        };
+        mViewPager.setAdapter(fragmentPagerAdapter);
+        mViewPager.setOffscreenPageLimit(4);
+        mViewPager.setOnPageChangeListener(this);
+        initData();
+
+    }
+
+    protected void initData() {
+        final Conversation.ConversationType[] conversationTypes = {
+                Conversation.ConversationType.PRIVATE,
+                Conversation.ConversationType.GROUP, Conversation.ConversationType.SYSTEM,
+                Conversation.ConversationType.PUBLIC_SERVICE, Conversation.ConversationType.APP_PUBLIC_SERVICE
+        };
+
+        RongIM.getInstance().addUnReadMessageCountChangedObserver(this, conversationTypes);
+        getConversationPush();// 获取 push 的 id 和 target
+        getPushMessage();
+    }
+
+    private void getPushMessage() {
+        Intent intent = getIntent();
+        if (intent != null && intent.getData() != null && intent.getData().getScheme().equals("rong")) {
+            String path = intent.getData().getPath();
+            if (path.contains("push_message")) {
+                SharedPreferences sharedPreferences = getSharedPreferences("config", MODE_PRIVATE);
+                String cacheToken = sharedPreferences.getString("loginToken", "");
+                if (TextUtils.isEmpty(cacheToken)) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                } else {
+                    if (!RongIM.getInstance().getCurrentConnectionStatus().equals(RongIMClient.ConnectionStatusListener.ConnectionStatus.CONNECTED)) {
+                        LoadDialog.show(mContext);
+                        RongIM.connect(cacheToken, new RongIMClient.ConnectCallback() {
+                            @Override
+                            public void onTokenIncorrect() {
+                                LoadDialog.dismiss(mContext);
+                            }
+
+                            @Override
+                            public void onSuccess(String s) {
+                                LoadDialog.dismiss(mContext);
+                            }
+
+                            @Override
+                            public void onError(RongIMClient.ErrorCode e) {
+                                LoadDialog.dismiss(mContext);
+                            }
+                        });
+                    }
+                }
+            }
+        }
+    }
+
+    private void getConversationPush() {
+        if (getIntent() != null && getIntent().hasExtra("PUSH_CONVERSATIONTYPE") && getIntent().hasExtra("PUSH_TARGETID")) {
+
+            final String conversationType = getIntent().getStringExtra("PUSH_CONVERSATIONTYPE");
+            final String targetId = getIntent().getStringExtra("PUSH_TARGETID");
+
+
+            RongIM.getInstance().getConversation(Conversation.ConversationType.valueOf(conversationType), targetId, new RongIMClient.ResultCallback<Conversation>() {
+                @Override
+                public void onSuccess(Conversation conversation) {
+
+                    if (conversation != null) {
+
+                        if (conversation.getLatestMessage() instanceof ContactNotificationMessage) { //好友消息的push
+                            startActivity(new Intent(MainActivity.this, NewFriendListActivity.class));
+                        } else {
+                            Uri uri = Uri.parse("rong://" + getApplicationInfo().packageName).buildUpon().appendPath("conversation")
+                                    .appendPath(conversationType).appendQueryParameter("targetId", targetId).build();
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        }
+                    }
+                }
+
+                @Override
+                public void onError(RongIMClient.ErrorCode e) {
+
+                }
+            });
+        }
     }
 
     private Fragment initConversationList() {
